@@ -90,7 +90,7 @@ int alphabeta(Board board,Player player_1,Player player_2,int depth,int alpha,in
     int temp;
     int value;
     if(depth==0)
-        return evaluator(board,player_1);
+        return evaluator(board,player_2);
     if(maximizingPlayer){
         value = MIN;
         for(int i = 0;i < ROW;i++){
@@ -119,7 +119,7 @@ int alphabeta(Board board,Player player_1,Player player_2,int depth,int alpha,in
                 if(board.get_cell_color(i,j)==player_1.get_color()||board.get_cell_color(i,j)=='w'){
                     Board new_board = board;
                     new_board.place_orb(i,j,&player_1);
-                    temp = alphabeta(new_board,player_2,player_1,depth-1,alpha,beta,true);
+                    temp = -alphabeta(new_board,player_2,player_1,depth-1,alpha,beta,true);
                     if(value>temp)
                         value=temp;
                     if(beta>value)
@@ -148,7 +148,7 @@ void algorithm_A(Board board, Player player, int index[]){
             if(board.get_cell_color(i,j)==player_1.get_color()||board.get_cell_color(i,j)=='w'){
                 Board new_board = board;
                 new_board.place_orb(i,j,&player_1);
-                int temp = alphabeta(new_board,player_2,player_1,3,alpha,beta,true);
+                int temp = alphabeta(new_board,player_2,player_1,4,alpha,beta,true);
                 if(temp>max_val){
                     max_val = temp;
                     alpha = temp;
@@ -159,26 +159,3 @@ void algorithm_A(Board board, Player player, int index[]){
         }
     }
 }
-/*
-void algorithm_A(Board board, Player player, int index[]){
-
-    //////your algorithm design///////////
-    int alpha = MIN;
-    int beta = MAX;
-    int max_val = MIN;
-    for(int i = 0;i < ROW;i++){
-        for(int j = 0;j<COL;j++){
-            if(board.get_cell_color(i,j)==player.get_color()||board.get_cell_color(i,j)=='w'){
-                Board new_board = board;
-                new_board.place_orb(i,j,&player);
-                int temp = alphabeta(new_board,player,4,alpha,beta,false);
-                if(temp>max_val){
-                    max_val = temp;
-                    alpha = temp;
-                    index[0] = i;
-                    index[1] = j;
-                }
-            }
-        }
-    }
-}*/
