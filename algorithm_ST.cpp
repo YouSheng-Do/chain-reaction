@@ -86,19 +86,19 @@ int evaluator(Board board,Player player){
     return value;
 }
 
-int alphabeta(Board board,Player player,int depth,int alpha,int beta,bool maximizingPlayer){
+int alphabeta(Board board,Player player_1,Player player_2,int depth,int alpha,int beta,bool maximizingPlayer){
     int temp;
     int value;
     if(depth==0)
-        return evaluator(board,player);
+        return evaluator(board,player_1);
     if(maximizingPlayer){
         value = MIN;
         for(int i = 0;i < ROW;i++){
             for(int j = 0;j<COL;j++){
-                if(board.get_cell_color(i,j)==player.get_color()||board.get_cell_color(i,j)=='w'){
+                if(board.get_cell_color(i,j)==player_1.get_color()||board.get_cell_color(i,j)=='w'){
                     Board new_board = board;
-                    new_board.place_orb(i,j,&player);
-                    temp = alphabeta(new_board,player,depth-1,alpha,beta,false);
+                    new_board.place_orb(i,j,&player_1);
+                    temp = alphabeta(new_board,player_2,player_1,depth-1,alpha,beta,false);
                     if(value<temp)
                         value=temp;
                     if(alpha<value)
@@ -107,6 +107,8 @@ int alphabeta(Board board,Player player,int depth,int alpha,int beta,bool maximi
                         break;
                 }
             }
+            if(alpha>beta)
+                        break;
         }
         return value;
     }
@@ -114,10 +116,10 @@ int alphabeta(Board board,Player player,int depth,int alpha,int beta,bool maximi
         value = MAX;
         for(int i = 0;i < ROW;i++){
             for(int j = 0;j<COL;j++){
-                if(board.get_cell_color(i,j)!=player.get_color()||board.get_cell_color(i,j)=='w'){
+                if(board.get_cell_color(i,j)==player_1.get_color()||board.get_cell_color(i,j)=='w'){
                     Board new_board = board;
-                    new_board.place_orb(i,j,&player);
-                    temp = alphabeta(new_board,player,depth-1,alpha,beta,true);
+                    new_board.place_orb(i,j,&player_1);
+                    temp = alphabeta(new_board,player_2,player_1,depth-1,alpha,beta,true);
                     if(value>temp)
                         value=temp;
                     if(beta>value)
@@ -126,11 +128,38 @@ int alphabeta(Board board,Player player,int depth,int alpha,int beta,bool maximi
                         break;
                 }
             }
+            if(alpha>beta)
+                        break;
         }
         return value;
     }
 }
 
+void algorithm_A(Board board, Player player, int index[]){
+
+    //////your algorithm design///////////
+    int alpha = MIN;
+    int beta = MAX;
+    int max_val = MIN;
+    Player player_1 = player;
+    Player player_2('r'+'b'-int(player_1.get_color()));
+    for(int i = 0;i < ROW;i++){
+        for(int j = 0;j<COL;j++){
+            if(board.get_cell_color(i,j)==player_1.get_color()||board.get_cell_color(i,j)=='w'){
+                Board new_board = board;
+                new_board.place_orb(i,j,&player_1);
+                int temp = alphabeta(new_board,player_2,player_1,3,alpha,beta,true);
+                if(temp>max_val){
+                    max_val = temp;
+                    alpha = temp;
+                    index[0] = i;
+                    index[1] = j;
+                }
+            }
+        }
+    }
+}
+/*
 void algorithm_A(Board board, Player player, int index[]){
 
     //////your algorithm design///////////
@@ -152,4 +181,4 @@ void algorithm_A(Board board, Player player, int index[]){
             }
         }
     }
-}
+}*/
